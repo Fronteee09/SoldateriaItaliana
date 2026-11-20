@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corpi d'Armata - Soldateria Italiana</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            padding: 20px 16px;
+            background-color: #140608;
+            color: #f5f0e6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .bg-blur {
+            position: fixed;
+            inset: -20px;
+            background-image: url('sfondosi.png');
+            background-size: cover;
+            background-position: center;
+            filter: blur(7px) brightness(0.6);
+            z-index: -1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 720px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Header e Box leggero */
+        .panel {
+            background: rgba(54, 14, 19, 0.78);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            color: #d4af37;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .badge-count {
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid #d4af37;
+            color: #f7e7b4;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Box Mail Moderatore */
+        .mod-mail-box {
+            border-color: #e5c158;
+            background: rgba(82, 20, 28, 0.88);
+        }
+
+        .mod-mail-title {
+            font-family: 'Cinzel', serif;
+            color: #ffd700;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .request-item {
+            background: rgba(20, 6, 8, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        /* Barra di ricerca */
+        .search-bar {
+            width: 100%;
+            padding: 11px 14px;
+            background: rgba(20, 6, 8, 0.7);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .search-bar:focus {
+            border-color: #d4af37;
+        }
+
+        /* Form e Input */
+        input, textarea, select {
+            width: 100%;
+            padding: 9px 12px;
+            background: rgba(20, 6, 8, 0.65);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.88rem;
+            margin-bottom: 10px;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Pulsanti */
+        .btn {
+            padding: 9px 14px;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid #d4af37;
+            border-radius: 6px;
+            color: #f7e7b4;
+            font-family: 'Cinzel', serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: #d4af37;
+            color: #2b090d;
+        }
+
+        .btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.75rem;
+        }
+
+        .btn-approve {
+            border-color: #4caf50;
+            color: #a5d6a7;
+            background: rgba(76, 175, 80, 0.15);
+        }
+
+        .btn-approve:hover {
+            background: #4caf50;
+            color: #fff;
+        }
+
+        .btn-reject {
+            border-color: #ef5350;
+            color: #ef9a9a;
+            background: rgba(239, 83, 80, 0.15);
+        }
+
+        .btn-reject:hover {
+            background: #ef5350;
+            color: #fff;
+        }
+
+        /* Griglia Corpi d'Armata */
+        .corpi-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+
+        .corpo-card {
+            background: rgba(54, 14, 19, 0.78);
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            border-radius: 10px;
+            padding: 18px;
+            backdrop-filter: blur(8px);
+        }
+
+        .corpo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .corpo-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.15rem;
+            color: #d4af37;
+        }
+
+        .corpo-desc {
+            font-size: 0.86rem;
+            color: #e0d8c8;
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+
+        .brigate-section {
+            background: rgba(20, 6, 8, 0.45);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-bottom: 14px;
+        }
+
+        .brigate-header {
+            font-size: 0.78rem;
+            color: #e5c158;
+            font-family: 'Cinzel', serif;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .brigata-tag {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            margin: 0 6px 6px 0;
+        }
+
+        .add-brigata-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .add-brigata-row input {
+            margin-bottom: 0;
+            padding: 6px 10px;
+            font-size: 0.8rem;
+        }
+
+        .join-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .join-row select {
+            margin-bottom: 0;
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .back-link {
+            color: #d4af37;
+            font-size: 0.85rem;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .status-banner {
+            font-size: 0.85rem;
+            padding: 10px 14px;
+            border-radius: 6px;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: #f7e7b4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-blur"></div>
+
+    <div class="container">
+        <!-- BOX MAIL MODERATORE (Visibile solo all'UID 0jjzsNxpLhZKyyQmHx2RY6GGiUi2) -->
+        <section id="mod-mail-panel" class="panel mod-mail-box hidden">
+            <div class="mod-mail-title">
+                <span>✉️ POSTA ALTO COMANDO (RICHIESTE)</span>
+                <span id="mail-count" class="badge-count">0</span>
+            </div>
+            <div id="requests-list">
+                <p style="font-size: 0.82rem; color: #ccc;">Nessuna richiesta in attesa.</p>
+            </div>
+        </section>
+
+        <!-- INTESTAZIONE E RICERCA -->
+        <header class="panel">
+            <div class="header-top">
+                <h1>Corpi d'Armata</h1>
+                <span class="badge-count">Corpi Attivi: <strong id="total-corpi-count">0</strong></span>
+            </div>
+            
+            <div id="user-status-bar" class="status-banner" style="margin-bottom: 12px;">
+                Caricamento stato militare...
+            </div>
+
+            <input type="text" id="search-input" class="search-bar" placeholder="Cerca un Corpo d'Armata o una Brigata/Divisione...">
+        </header>
+
+        <!-- PANNELLO CREAZIONE NUOVO CORPO (Solo Moderatore) -->
+        <section id="mod-create-panel" class="panel hidden">
+            <h2 style="font-family: 'Cinzel', serif; font-size: 1rem; color: #d4af37; margin-bottom: 10px;">
+                + Istituisci Nuovo Corpo d'Armata
+            </h2>
+            <input type="text" id="new-corpo-name" placeholder="Nome del Corpo (es. 1ª Armata Telematica)">
+            <textarea id="new-corpo-desc" rows="2" placeholder="Descrizione e compiti operativi..."></textarea>
+            <button id="btn-create-corpo" class="btn">Crea Scheda Corpo</button>
+        </section>
+
+        <!-- LISTA CORPI D'ARMATA -->
+        <main id="corpi-container" class="corpi-grid">
+            <!-- Le schede vengono generate dinamicamente da Firestore -->
+        </main>
+
+        <a href="index.html" class="back-link">← Torna all'Alto Comando</a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { 
+            getFirestore, collection, doc, addDoc, updateDoc, getDoc, setDoc,
+            onSnapshot, arrayUnion, query, where, deleteDoc 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtSgXFtxyh5nOTw_LJYUQWxirKDEI5qRA",
+            authDomain: "soldateria-italiana.firebaseapp.com",
+            projectId: "soldateria-italiana",
+            storageBucket: "soldateria-italiana.firebasestorage.app",
+            messagingSenderId: "796071358350",
+            appId: "1:796071358350:web:550d693197abee8f4e3edf",
+            measurementId: "G-ZLK81VSLPG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // UID Moderatore con privilegi speciali
+        const MOD_UID = "0jjzsNxpLhZKyyQmHx2RY6GGiUi2";
+
+        let currentUser = null;
+        let isMod = false;
+        let userProfile = null;
+        let pendingRequest = null;
+        let allCorpi = [];
+
+        // Elementi DOM
+        const modMailPanel = document.getElementById('mod-mail-panel');
+        const modCreatePanel = document.getElementById('mod-create-panel');
+        const requestsList = document.getElementById('requests-list');
+        const mailCount = document.getElementById('mail-count');
+        const totalCorpiCount = document.getElementById('total-corpi-count');
+        const userStatusBar = document.getElementById('user-status-bar');
+        const corpiContainer = document.getElementById('corpi-container');
+        const searchInput = document.getElementById('search-input');
+
+        // 1. Monitoraggio Autenticazione
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            isMod = user && user.uid === MOD_UID;
+
+            if (isMod) {
+                modMailPanel.classList.remove('hidden');
+                modCreatePanel.classList.remove('hidden');
+                listenToRequests();
+            } else {
+                modMailPanel.classList.add('hidden');
+                modCreatePanel.classList.add('hidden');
+            }
+
+            if (user) {
+                // Ascolta il profilo del soldato su Firestore
+                onSnapshot(doc(db, "soldati", user.uid), (docSnap) => {
+                    if (docSnap.exists()) {
+                        userProfile = docSnap.data();
+                    } else {
+                        userProfile = { nickname: user.displayName || "Soldato", corpo: "Non assegnato" };
+                    }
+                    updateStatusBar();
+                    renderCorpi();
+                });
+
+                // Controlla se l'utente ha già una richiesta in attesa
+                const qReq = query(collection(db, "richieste_corpi"), where("uid", "==", user.uid));
+                onSnapshot(qReq, (snap) => {
+                    pendingRequest = snap.empty ? null : { id: snap.docs[0].id, ...snap.docs[0].data() };
+                    updateStatusBar();
+                    renderCorpi();
+                });
+            } else {
+                userProfile = null;
+                pendingRequest = null;
+                updateStatusBar();
+                renderCorpi();
+            }
+        });
+
+        // Aggiorna la barra di stato dell'utente
+        function updateStatusBar() {
+            if (!currentUser) {
+                userStatusBar.innerHTML = `Non sei autenticato. <a href="account.html" style="color:#ffd700;">Accedi o Arruolati</a> per richiedere un Corpo d'Armata.`;
+                return;
+            }
+
+            const corpoAttuale = userProfile?.corpo || "Non assegnato";
+            if (corpoAttuale !== "Non assegnato") {
+                const brigataTxt = userProfile?.brigata ? ` — Brigata/Div: <strong>${userProfile.brigata}</strong>` : "";
+                userStatusBar.innerHTML = `Soldato <strong>${userProfile.nickname}</strong> | Corpo assegnato: <strong>${corpoAttuale}</strong>${brigataTxt}`;
+            } else if (pendingRequest) {
+                userStatusBar.innerHTML = `
+                    Richiesta in attesa per: <strong>${pendingRequest.corpoNome}</strong> 
+                    <button id="btn-cancel-req" class="btn btn-sm btn-reject" style="margin-left:8px;">Annulla Richiesta</button>
+                `;
+                document.getElementById('btn-cancel-req')?.addEventListener('click', async () => {
+                    await deleteDoc(doc(db, "richieste_corpi", pendingRequest.id));
+                });
+            } else {
+                userStatusBar.innerHTML = `Soldato <strong>${userProfile?.nickname || ''}</strong>: Nessun Corpo assegnato. Scegli una sola unità qui sotto.`;
+            }
+        }
+
+        // 2. Ascolta i Corpi d'Armata in tempo reale
+        onSnapshot(collection(db, "corpi_armata"), (snapshot) => {
+            allCorpi = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            totalCorpiCount.textContent = allCorpi.length;
+            renderCorpi();
+        });
+
+        // 3. Creazione Nuovo Corpo (Solo Moderatore)
+        document.getElementById('btn-create-corpo').addEventListener('click', async () => {
+            if (!isMod) return;
+            const nome = document.getElementById('new-corpo-name').value.trim();
+            const descrizione = document.getElementById('new-corpo-desc').value.trim();
+
+            if (!nome) return alert("Inserisci il nome del Corpo d'Armata.");
+
+            await addDoc(collection(db, "corpi_armata"), {
+                nome,
+                descrizione: descrizione || "Nessuna descrizione operativa.",
+                brigate: [],
+                creatoIl: new Date().toISOString()
+            });
+
+            document.getElementById('new-corpo-name').value = '';
+            document.getElementById('new-corpo-desc').value = '';
+        });
+
+        // 4. Barra di ricerca
+        searchInput.addEventListener('input', () => renderCorpi());
+
+        // 5. Rendering delle schede Corpi d'Armata
+        function renderCorpi() {
+            const term = searchInput.value.toLowerCase().trim();
+            const filtered = allCorpi.filter(c => {
+                const matchNome = c.nome.toLowerCase().includes(term);
+                const matchDesc = (c.descrizione || "").toLowerCase().includes(term);
+                const matchBrigate = (c.brigate || []).some(b => b.toLowerCase().includes(term));
+                return matchNome || matchDesc || matchBrigate;
+            });
+
+            if (filtered.length === 0) {
+                corpiContainer.innerHTML = `<div class="panel" style="text-align:center; font-size:0.9rem; color:#ccc;">Nessun Corpo d'Armata trovato.</div>`;
+                return;
+            }
+
+            const hasCorpo = userProfile && userProfile.corpo && userProfile.corpo !== "Non assegnato";
+            const canRequest = currentUser && !hasCorpo && !pendingRequest;
+
+            corpiContainer.innerHTML = filtered.map(corpo => {
+                const brigate = corpo.brigate || [];
+                const brigateHtml = brigate.length > 0 
+                    ? brigate.map(b => `<span class="brigata-tag">${b}</span>`).join('')
+                    : `<span style="font-size:0.78rem; color:#aaa;">Nessuna brigata o divisione istituita.</span>`;
+
+                // Selettore brigata se l'utente può fare richiesta
+                const selectBrigataHtml = brigate.length > 0 ? `
+                    <select id="select-brigata-${corpo.id}">
+                        <option value="">-- Qualsiasi Brigata/Divisione --</option>
+                        ${brigate.map(b => `<option value="${b}">${b}</option>`).join('')}
+                    </select>
+                ` : '';
+
+                // Campo aggiunta brigata (visibile al Moderatore)
+                const modAddBrigataHtml = isMod ? `
+                    <div class="add-brigata-row">
+                        <input type="text" id="input-brigata-${corpo.id}" placeholder="Nuova Brigata o Divisione...">
+                        <button class="btn btn-sm" onclick="aggiungiBrigata('${corpo.id}')">+ Aggiungi</button>
+                    </div>
+                ` : '';
+
+                let btnText = "Richiedi Arruolamento";
+                if (!currentUser) btnText = "Accedi per richiedere";
+                else if (hasCorpo) btnText = userProfile.corpo === corpo.nome ? "Tuo Corpo Attuale" : "Già arruolato altrove";
+                else if (pendingRequest) btnText = "Richiesta già inviata";
+
+                return `
+                    <article class="corpo-card">
+                        <div class="corpo-header">
+                            <h3 class="corpo-title">${corpo.nome}</h3>
+                            <span class="badge-count">Divisioni/Brigate: ${brigate.length}</span>
+                        </div>
+                        <p class="corpo-desc">${corpo.descrizione}</p>
+
+                        <div class="brigate-section">
+                            <div class="brigate-header">
+                                <span>BRIGATE E DIVISIONI</span>
+                            </div>
+                            <div>${brigateHtml}</div>
+                            ${modAddBrigataHtml}
+                        </div>
+
+                        <div class="join-row">
+                            ${canRequest ? selectBrigataHtml : ''}
+                            <button 
+                                class="btn" 
+                                style="flex: 1;"
+                                ${!canRequest ? 'disabled' : ''} 
+                                onclick="inviaRichiesta('${corpo.id}', '${corpo.nome.replace(/'/g, "\\'")}')"
+                            >
+                                ${btnText}
+                            </button>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        // Funzione globale per aggiungere una brigata/divisione (Moderatore)
+        window.aggiungiBrigata = async (corpoId) => {
+            if (!isMod) return;
+            const input = document.getElementById(`input-brigata-${corpoId}`);
+            const nomeBrigata = input.value.trim();
+            if (!nomeBrigata) return;
+
+            await updateDoc(doc(db, "corpi_armata", corpoId), {
+                brigate: arrayUnion(nomeBrigata)
+            });
+            input.value = '';
+        };
+
+        // Funzione globale per inviare la richiesta di arruolamento (1 sola per utente)
+        window.inviaRichiesta = async (corpoId, corpoNome) => {
+            if (!currentUser) return;
+            const selectEl = document.getElementById(`select-brigata-${corpoId}`);
+            const brigataScelta = selectEl ? selectEl.value : "";
+
+            await addDoc(collection(db, "richieste_corpi"), {
+                uid: currentUser.uid,
+                nickname: userProfile?.nickname || currentUser.displayName || "Soldato",
+                corpoId,
+                corpoNome,
+                brigata: brigataScelta,
+                data: new Date().toISOString()
+            });
+        };
+
+        // 6. Ascolto Richieste nel Box Mail del Moderatore
+        function listenToRequests() {
+            onSnapshot(collection(db, "richieste_corpi"), (snapshot) => {
+                const reqs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                mailCount.textContent = reqs.length;
+
+                if (reqs.length === 0) {
+                    requestsList.innerHTML = `<p style="font-size: 0.82rem; color: #ccc;">Nessuna richiesta in attesa.</p>`;
+                    return;
+                }
+
+                requestsList.innerHTML = reqs.map(r => `
+                    <div class="request-item">
+                        <div>
+                            <strong>${r.nickname}</strong> chiede di entrare in 
+                            <span style="color:#ffd700;">${r.corpoNome}</span>
+                            ${r.brigata ? `(${r.brigata})` : ''}
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <button class="btn btn-sm btn-approve" onclick="gestisciRichiesta('${r.id}', '${r.uid}', '${r.corpoNome.replace(/'/g, "\\'")}', '${(r.brigata || '').replace(/'/g, "\\'")}', true)">Approva</button>
+                            <button class="btn btn-sm btn-reject" onclick="gestisciRichiesta('${r.id}', '${r.uid}', '', '', false)">Rifiuta</button>
+                        </div>
+                    </div>
+                `).join('');
+            });
+        }
+
+        // Approva o rifiuta richiesta (Moderatore)
+        window.gestisciRichiesta = async (reqId, targetUid, corpoNome, brigata, approvata) => {
+            if (!isMod) return;
+
+            if (approvata) {
+                // Aggiorna il documento del soldato assegnandogli il Corpo e la Brigata
+                await setDoc(doc(db, "soldati", targetUid), {
+                    corpo: corpoNome,
+                    brigata: brigata || "Nessuna"
+                }, { merge: true });
+            }
+
+            // Elimina la richiesta dalla posta
+            await deleteDoc(doc(db, "richieste_corpi", reqId));
+        };
+    </script>
+</body>
+</html>
