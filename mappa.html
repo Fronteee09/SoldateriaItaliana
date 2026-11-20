@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mappa Strategica Europea - Soldateria Italiana</title>
     
-    <!-- Font Romano + Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -30,7 +29,6 @@
             overflow: hidden;
         }
 
-        /* Barra superiore Nero / Blu Notte */
         .top-bar {
             background: rgba(11, 19, 36, 0.95);
             border-bottom: 1.5px solid #d4af37;
@@ -74,7 +72,6 @@
             text-transform: uppercase;
         }
 
-        /* Box Identità Soldato in alto */
         .user-badge {
             background: rgba(6, 11, 22, 0.85);
             border: 1px solid rgba(212, 175, 55, 0.6);
@@ -101,7 +98,6 @@
             color: #f5f0e6;
         }
 
-        /* Contenitore Mappa */
         #map-wrapper {
             flex: 1;
             position: relative;
@@ -114,7 +110,6 @@
             background-color: #090d16;
         }
 
-        /* Riquadro informativo regione selezionata in basso */
         .region-info-box {
             position: absolute;
             bottom: 20px;
@@ -155,7 +150,6 @@
             margin-top: 2px;
         }
 
-        /* Popup Leaflet */
         .leaflet-popup-content-wrapper {
             background: rgba(11, 19, 36, 0.95);
             color: #f5f0e6;
@@ -209,8 +203,8 @@
 
         <div class="region-info-box">
             <div class="region-label">Settore Selezionato</div>
-            <div class="region-name" id="selected-region-name">Tocca una regione</div>
-            <div class="region-sub" id="selected-region-country">Esplora il teatro operativo europeo</div>
+            <div class="region-name" id="selected-region-name">Nessuna regione selezionata</div>
+            <div class="region-sub" id="selected-region-country">Tocca una regione per esaminarla</div>
         </div>
     </div>
 
@@ -259,7 +253,7 @@
         });
     </script>
 
-    <!-- Script Mappa Interattiva senza necessità di API Key -->
+    <!-- Script Mappa -->
     <script>
         const map = L.map('map', {
             center: [48.5, 13.0],
@@ -268,7 +262,6 @@
             maxZoom: 10
         });
 
-        // Layer Esri Dark Gray Base (gratuito, senza API key e senza scritte di errore)
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
             attribution: 'Tiles &copy; Esri',
             maxZoom: 16
@@ -276,25 +269,25 @@
 
         let selectedLayer = null;
 
-        // Stile Blu Notte / Oro per le regioni
+        // Bordi molto sottili e sfumati, colore leggero
         function defaultStyle() {
             return {
-                fillColor: '#132240',
-                weight: 1.2,
-                opacity: 1,
-                color: '#d4af37',
-                fillOpacity: 0.55
+                fillColor: '#1d2a44',
+                weight: 0.6,
+                opacity: 0.5,
+                color: '#4a5b7d',
+                fillOpacity: 0.25
             };
         }
 
-        // Stile quando tocchi una regione
+        // Evidenziazione oro quando selezionata
         function highlightStyle() {
             return {
                 fillColor: '#d4af37',
-                weight: 2,
+                weight: 1.5,
                 opacity: 1,
-                color: '#ffffff',
-                fillOpacity: 0.75
+                color: '#fff',
+                fillOpacity: 0.65
             };
         }
 
@@ -313,6 +306,17 @@
                         const countryCode = props.co || (props.id ? props.id.substring(0, 2) : "EU");
 
                         layer.on('click', function (e) {
+                            // Se clicchi di nuovo la stessa regione già selezionata: la deseleziona
+                            if (selectedLayer === e.target) {
+                                geojsonLayer.resetStyle(selectedLayer);
+                                selectedLayer = null;
+                                map.closePopup();
+                                document.getElementById('selected-region-name').textContent = "Nessuna regione selezionata";
+                                document.getElementById('selected-region-country').textContent = "Tocca una regione per esaminarla";
+                                return;
+                            }
+
+                            // Altrimenti, resetta la precedente (se c'era) e seleziona la nuova
                             if (selectedLayer) {
                                 geojsonLayer.resetStyle(selectedLayer);
                             }
@@ -321,9 +325,11 @@
                             selectedLayer.setStyle(highlightStyle());
                             selectedLayer.bringToFront();
 
+                            // Aggiorna box in basso
                             document.getElementById('selected-region-name').textContent = regionName;
                             document.getElementById('selected-region-country').textContent = `Codice Settore: ${props.id || ''} (${countryCode})`;
 
+                            // Mostra popup
                             L.popup()
                                 .setLatLng(e.latlng)
                                 .setContent(`<div class="popup-title">${regionName}</div><div style="font-size:0.78rem; margin-top:2px;">Settore: ${props.id || countryCode}</div>`)
