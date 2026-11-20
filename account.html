@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account - Soldateria Italiana</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            padding: 16px;
+            position: relative;
+            background-color: #140608;
+            color: #f5f0e6;
+        }
+
+        .bg-blur {
+            position: fixed;
+            inset: -20px;
+            background-image: url('sfondosi.png');
+            background-size: cover;
+            background-position: center;
+            filter: blur(7px) brightness(0.65);
+            z-index: -1;
+        }
+
+        .main-box {
+            width: 100%;
+            max-width: 390px;
+            background: rgba(54, 14, 19, 0.72);
+            border: 1px solid rgba(212, 175, 55, 0.55);
+            border-radius: 10px;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            color: #d4af37;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            color: #d8cfc0;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            color: #e5c158;
+            margin-bottom: 5px;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.05em;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(20, 6, 8, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #d4af37;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 11px 16px;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid #d4af37;
+            border-radius: 6px;
+            color: #f7e7b4;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 6px;
+        }
+
+        .btn:hover {
+            background: #d4af37;
+            color: #2b090d;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border-color: rgba(212, 175, 55, 0.35);
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 18px;
+            color: #d4af37;
+            font-size: 0.8rem;
+            text-decoration: none;
+            opacity: 0.85;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        #status-msg {
+            margin-top: 12px;
+            font-size: 0.82rem;
+            min-height: 18px;
+            color: #ff9e9e;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .profile-info {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 14px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(212, 175, 55, 0.25);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-blur"></div>
+
+    <main class="main-box">
+        <h1>Identità Militare</h1>
+        <p class="subtitle">Accesso e Arruolamento Soldateria</p>
+
+        <!-- Sezione Login / Registrazione -->
+        <div id="auth-section">
+            <div class="form-group">
+                <label for="nickname">Nickname</label>
+                <input type="text" id="nickname" placeholder="Es. Caporal_Divano" autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password (min. 6 caratteri)</label>
+                <input type="password" id="password" placeholder="••••••••">
+            </div>
+
+            <button id="btn-login" class="btn">Accedi</button>
+            <button id="btn-register" class="btn btn-secondary">Arruolati (Nuovo Account)</button>
+        </div>
+
+        <!-- Sezione Utente Loggato -->
+        <div id="profile-section" class="hidden">
+            <div class="profile-info">
+                <p style="font-size: 0.8rem; color: #d4af37;">SOLDATO IDENTIFICATO:</p>
+                <h2 id="display-nick" style="font-family: 'Cinzel', serif; margin: 6px 0;"></h2>
+                <p style="font-size: 0.8rem; color: #ccc;">Grado: Recluta Semplicissima</p>
+            </div>
+            <button id="btn-logout" class="btn btn-secondary">Congedati (Esci)</button>
+        </div>
+
+        <div id="status-msg"></div>
+
+        <a href="index.html" class="back-link">← Torna all'Alto Comando</a>
+    </main>
+
+    <!-- Firebase SDK (v10 via CDN per siti statici HTML) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            onAuthStateChanged, 
+            signOut,
+            updateProfile
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtSgXFtxyh5nOTw_LJYUQWxirKDEI5qRA",
+            authDomain: "soldateria-italiana.firebaseapp.com",
+            projectId: "soldateria-italiana",
+            storageBucket: "soldateria-italiana.firebasestorage.app",
+            messagingSenderId: "796071358350",
+            appId: "1:796071358350:web:550d693197abee8f4e3edf",
+            measurementId: "G-ZLK81VSLPG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const nickInput = document.getElementById('nickname');
+        const passInput = document.getElementById('password');
+        const statusMsg = document.getElementById('status-msg');
+        const authSection = document.getElementById('auth-section');
+        const profileSection = document.getElementById('profile-section');
+        const displayNick = document.getElementById('display-nick');
+
+        // Converte il nickname in una finta email valida per Firebase
+        function formatEmail(nickname) {
+            const cleanNick = nickname.trim().toLowerCase().replace(/[^a-z0-9._-]/g, '');
+            return `${cleanNick}@soldateria.it`;
+        }
+
+        // Controlla se l'utente è già loggato
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                authSection.classList.add('hidden');
+                profileSection.classList.remove('hidden');
+                displayNick.textContent = user.displayName || user.email.split('@')[0];
+                statusMsg.textContent = '';
+            } else {
+                authSection.classList.remove('hidden');
+                profileSection.classList.add('hidden');
+            }
+        });
+
+        // Registrazione
+        document.getElementById('btn-register').addEventListener('click', async () => {
+            const rawNick = nickInput.value.trim();
+            const password = passInput.value;
+
+            if (rawNick.length < 3) {
+                statusMsg.textContent = "Il nickname deve avere almeno 3 caratteri.";
+                return;
+            }
+            if (password.length < 6) {
+                statusMsg.textContent = "La password deve avere almeno 6 caratteri.";
+                return;
+            }
+
+            const email = formatEmail(rawNick);
+            statusMsg.style.color = "#e5c158";
+            statusMsg.textContent = "Arruolamento in corso...";
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Salva il nickname originale nel profilo Auth
+                await updateProfile(user, { displayName: rawNick });
+
+                // Salva i dati del soldato su Firestore (utile per i registri futuri!)
+                await setDoc(doc(db, "soldati", user.uid), {
+                    nickname: rawNick,
+                    grado: "Recluta",
+                    corpo: "Non assegnato",
+                    dataArruolamento: new Date().toISOString()
+                });
+
+                displayNick.textContent = rawNick;
+                statusMsg.textContent = "";
+            } catch (error) {
+                statusMsg.style.color = "#ff9e9e";
+                if (error.code === 'auth/email-already-in-use') {
+                    statusMsg.textContent = "Questo nickname è già arruolato! Prova ad accedere.";
+                } else {
+                    statusMsg.textContent = "Errore: " + error.message;
+                }
+            }
+        });
+
+        // Login
+        document.getElementById('btn-login').addEventListener('click', async () => {
+            const rawNick = nickInput.value.trim();
+            const password = passInput.value;
+
+            if (!rawNick || !password) {
+                statusMsg.textContent = "Inserisci nickname e password.";
+                return;
+            }
+
+            const email = formatEmail(rawNick);
+            statusMsg.style.color = "#e5c158";
+            statusMsg.textContent = "Verifica credenziali...";
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                statusMsg.textContent = "";
+            } catch (error) {
+                statusMsg.style.color = "#ff9e9e";
+                statusMsg.textContent = "Nickname o password errati.";
+            }
+        });
+
+        // Logout
+        document.getElementById('btn-logout').addEventListener('click', async () => {
+            await signOut(auth);
+            nickInput.value = '';
+            passInput.value = '';
+        });
+    </script>
+</body>
+</html>
