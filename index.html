@@ -24,7 +24,7 @@
             font-family: 'Inter', sans-serif;
             padding: 16px;
             position: relative;
-            background-color: #140608;
+            background-color: #0b0f19;
         }
 
         /* Sfondo sfocato */
@@ -34,21 +34,21 @@
             background-image: url('sfondosi.png');
             background-size: cover;
             background-position: center;
-            filter: blur(7px) brightness(0.65);
+            filter: blur(7px) brightness(0.55);
             z-index: -1;
         }
 
-        /* Box centrale leggero e meno invadente */
+        /* Box centrale Nero / Blu Notte */
         .main-box {
             width: 100%;
             max-width: 390px;
-            background: rgba(54, 14, 19, 0.72);
-            border: 1px solid rgba(212, 175, 55, 0.55);
+            background: rgba(11, 19, 36, 0.82); /* Blu notte profondo e semitrasparente */
+            border: 1px solid rgba(212, 175, 55, 0.55); /* Bordo oro */
             border-radius: 10px;
             padding: 24px 20px;
             text-align: center;
             color: #f5f0e6;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(8px);
         }
 
@@ -80,7 +80,7 @@
         .description {
             font-size: 0.85rem;
             line-height: 1.5;
-            color: #e2dcd0;
+            color: #d0d7de;
             margin-bottom: 20px;
         }
 
@@ -109,7 +109,7 @@
 
         .btn:hover, .btn:active {
             background: #d4af37;
-            color: #2b090d;
+            color: #0b0f19;
         }
     </style>
 </head>
@@ -125,7 +125,7 @@
 
         <p class="description">
             Portale di reclutamento e coordinamento della <strong>Soldateria Italiana</strong>. 
-            Scegli il tuo Corpo d'Armata e consulta i registri ufficiali.
+            Scegli il tuo Corpo d'Armata, esplora la mappa e consulta i registri.
         </p>
 
         <nav class="nav-buttons">
@@ -133,6 +133,7 @@
             <a href="annunci.html" class="btn">Annunci</a>
             <a href="pagine.html" class="btn">Pagine</a>
             <a href="registri.html" class="btn">Registri</a>
+            <a href="mappa.html" class="btn">Mappa</a>
             <a href="corpidarmata.html" class="btn">Corpi d'Armata</a>
         </nav>
     </main>
