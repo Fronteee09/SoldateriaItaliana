@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annunci e Bollettini - Soldateria Italiana</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            padding: 20px 16px;
+            background-color: #140608;
+            color: #f5f0e6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .bg-blur {
+            position: fixed;
+            inset: -20px;
+            background-image: url('sfondosi.png');
+            background-size: cover;
+            background-position: center;
+            filter: blur(7px) brightness(0.6);
+            z-index: -1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 720px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .panel {
+            background: rgba(54, 14, 19, 0.78);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            color: #d4af37;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: #d8cfc0;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(20, 6, 8, 0.65);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.88rem;
+            margin-bottom: 10px;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #d4af37;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid #d4af37;
+            border-radius: 6px;
+            color: #f7e7b4;
+            font-family: 'Cinzel', serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #d4af37;
+            color: #2b090d;
+        }
+
+        .btn-delete {
+            background: rgba(239, 83, 80, 0.15);
+            border-color: #ef5350;
+            color: #ef9a9a;
+            padding: 4px 9px;
+            font-size: 0.72rem;
+        }
+
+        .btn-delete:hover {
+            background: #ef5350;
+            color: #fff;
+        }
+
+        .annunci-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .annuncio-card {
+            background: rgba(54, 14, 19, 0.78);
+            border-left: 3px solid #d4af37;
+            border-top: 1px solid rgba(212, 175, 55, 0.4);
+            border-right: 1px solid rgba(212, 175, 55, 0.4);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 8px;
+            padding: 18px 20px;
+            backdrop-filter: blur(8px);
+        }
+
+        .annuncio-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #e5c158;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+
+        .annuncio-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.15rem;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .annuncio-body {
+            font-size: 0.9rem;
+            color: #e6dfd3;
+            line-height: 1.55;
+            white-space: pre-line;
+        }
+
+        .annuncio-img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            margin-top: 12px;
+        }
+
+        .back-link {
+            color: #d4af37;
+            font-size: 0.85rem;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-blur"></div>
+
+    <div class="container">
+        <header class="panel">
+            <h1>Bollettini dell'Alto Comando</h1>
+            <p class="subtitle">Comunicati ufficiali, ordini del giorno e mobilitazioni.</p>
+        </header>
+
+        <!-- PANNELLO CREAZIONE ANNUNCIO (Solo Moderatore) -->
+        <section id="mod-panel" class="panel hidden">
+            <h2 style="font-family: 'Cinzel', serif; font-size: 1rem; color: #d4af37; margin-bottom: 10px;">
+                + Dirama Nuovo Annuncio
+            </h2>
+            <input type="text" id="annuncio-title" placeholder="Oggetto del comunicato (es. Mobilitazione Generale)">
+            <textarea id="annuncio-text" rows="3" placeholder="Testo dell'annuncio..."></textarea>
+            <input type="url" id="annuncio-img" placeholder="Link immagine allegata (opzionale, es. https://...)">
+            <button id="btn-post-annuncio" class="btn">Pubblica Comunicato</button>
+        </section>
+
+        <!-- BACHECA ANNUNCI -->
+        <main id="annunci-container" class="annunci-list">
+            <!-- Contenuto dinamico -->
+        </main>
+
+        <a href="index.html" class="back-link">← Torna all'Alto Comando</a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { 
+            getFirestore, collection, addDoc, deleteDoc, doc, 
+            onSnapshot, query, orderBy 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtSgXFtxyh5nOTw_LJYUQWxirKDEI5qRA",
+            authDomain: "soldateria-italiana.firebaseapp.com",
+            projectId: "soldateria-italiana",
+            storageBucket: "soldateria-italiana.firebasestorage.app",
+            messagingSenderId: "796071358350",
+            appId: "1:796071358350:web:550d693197abee8f4e3edf",
+            measurementId: "G-ZLK81VSLPG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const MOD_UID = "0jjzsNxpLhZKyyQmHx2RY6GGiUi2";
+        let isMod = false;
+        let allAnnunci = [];
+
+        const modPanel = document.getElementById('mod-panel');
+        const annunciContainer = document.getElementById('annunci-container');
+
+        onAuthStateChanged(auth, (user) => {
+            isMod = user && user.uid === MOD_UID;
+            if (isMod) {
+                modPanel.classList.remove('hidden');
+            } else {
+                modPanel.classList.add('hidden');
+            }
+            renderAnnunci();
+        });
+
+        const q = query(collection(db, "annunci"), orderBy("timestamp", "desc"));
+        onSnapshot(q, (snapshot) => {
+            allAnnunci = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            renderAnnunci();
+        });
+
+        document.getElementById('btn-post-annuncio').addEventListener('click', async () => {
+            if (!isMod) return;
+            const titolo = document.getElementById('annuncio-title').value.trim();
+            const testo = document.getElementById('annuncio-text').value.trim();
+            const imgUrl = document.getElementById('annuncio-img').value.trim();
+
+            if (!titolo || !testo) {
+                alert("Inserisci oggetto e testo dell'annuncio.");
+                return;
+            }
+
+            const now = new Date();
+            const dataFormattata = now.toLocaleDateString('it-IT', {
+                day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+
+            await addDoc(collection(db, "annunci"), {
+                titolo,
+                testo,
+                imgUrl: imgUrl.startsWith('http') ? imgUrl : "",
+                dataString: dataFormattata,
+                timestamp: Date.now()
+            });
+
+            document.getElementById('annuncio-title').value = '';
+            document.getElementById('annuncio-text').value = '';
+            document.getElementById('annuncio-img').value = '';
+        });
+
+        function renderAnnunci() {
+            if (allAnnunci.length === 0) {
+                annunciContainer.innerHTML = `<div class="panel" style="text-align:center; font-size:0.9rem; color:#ccc;">Nessun bollettino diramato.</div>`;
+                return;
+            }
+
+            annunciContainer.innerHTML = allAnnunci.map(item => {
+                const imgHtml = item.imgUrl
+                    ? `<img src="${item.imgUrl}" alt="Allegato comunicato" class="annuncio-img" loading="lazy">`
+                    : '';
+
+                const deleteBtnHtml = isMod
+                    ? `<button class="btn btn-delete" onclick="eliminaAnnuncio('${item.id}')">Elimina</button>`
+                    : '';
+
+                return `
+                    <article class="annuncio-card">
+                        <div class="annuncio-meta">
+                            <span>COMUNICATO UFFICIALE • ${item.dataString || ''}</span>
+                            ${deleteBtnHtml}
+                        </div>
+                        <h3 class="annuncio-title">${item.titolo}</h3>
+                        <div class="annuncio-body">${item.testo}</div>
+                        ${imgHtml}
+                    </article>
+                `;
+            }).join('');
+        }
+
+        window.eliminaAnnuncio = async (id) => {
+            if (!isMod) return;
+            if (confirm("Eliminare questo annuncio?")) {
+                await deleteDoc(doc(db, "annunci", id));
+            }
+        };
+    </script>
+</body>
+</html>
